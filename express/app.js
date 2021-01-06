@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 require('dotenv/config')
+const serverless = require('serverless-http');
 const Mew = require('../model/mewSchema')
 const cors = require('cors')
 
@@ -14,6 +15,7 @@ const router = express.Router();
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.json())
+app.use('/.netlify/functions/server', router);
 app.use(cors())
 
 app.get('/',(req,res)=>{
@@ -57,3 +59,4 @@ app.post('/mews',async (req,res)=>{
 })
 
 module.exports = app
+module.exports.handler = serverless(app)
