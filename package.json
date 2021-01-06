@@ -2,9 +2,9 @@
   "name": "new-ex",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "functions/app.js",
   "scripts": {
-
+    "build": "netlify-lambda build express",
     "start": "nodemon server.js"
   },
   "author": "nurman",
@@ -17,6 +17,9 @@
     "ejs": "^3.1.3",
     "express": "^4.17.1",
     "mocha": "^8.0.1",
-    "mongoose": "^5.9.20"
+    "mongoose": "^5.9.20",
+    "netlify-lambda": "^1.6.3",
+    "nodemon": "^1.19.2",
+    "serverless-http": "^2.3.0"
   }
 }
