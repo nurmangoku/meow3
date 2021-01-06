@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Meower</title>
+</head>
+<body>
+    <h1 class="title">Meower App</h1>
+    <form>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name">
+        <label for="content">Meow</label>
+        <textarea type="te xt" id="content" name="content"></textarea>
+        <button>send your meow</button>
+    </form>
+    <div class="loading"></div>
+    <div class="mews"></div>
+
+
+    <script>
+        const form = document.querySelector('form')
+        const mewsElement = document.querySelector('.mews')
+        const loadingElement = document.querySelector('.loading')
+        const API_URL = 'http://localhost:3000/mews'
+
+        loadingElement.style.display = 'none'
+
+        listAllMews()
+
+        form.addEventListener('submit',(event)=>{
+            event.preventDefault()
+
+            const formData = new FormData(form)
+            const name= formData.get('name')
+            const content= formData.get('content')
+            const mew = {
+                name,
+                content
+            }
+            form.style.display="none"
+            loadingElement.style.display = ''
+            
+            fetch(API_URL,{
+                method:'POST',
+                body: JSON.stringify(mew),
+                headers: {
+                    'content-type':'application/json'
+                }
+            }).then(response=>{
+                response.json()
+            })
+              .then(createdMew=>{
+                listAllMews ()
+                  form.reset()
+                  loadingElement.style.display = 'none'
+                  form.style.display=""
+                  })
+              .catch(err=>console.log(err))
+        })
+
+        async function listAllMews (){
+            try {
+                mewsElement.innerHTML=''
+                const response = await fetch(API_URL)
+                const mews = await response.json()
+                mews.reverse()
+                mews.forEach(mew => {
+                    const div = document.createElement('div')
+                    const header = document.createElement('h3')
+                    header.textContent = mew.name
+
+                    const contents = document.createElement('p')
+                    contents.textContent = mew.content
+
+                    const date = document.createElement('small')
+                    date.textContent = new Date(mew.createdAt)
+
+                    div.appendChild(header)
+                    div.appendChild(contents)
+                    div.appendChild(date)
+
+                    mewsElement.appendChild(div)
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
+</body>
+</html>
